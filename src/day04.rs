@@ -1,4 +1,3 @@
-use std::ops::Add;
 use crate::parser::getLines;
 
 fn getGridIndex(grid: &Vec<Vec<char>>, y: i32, x: i32) -> Option<char>{
@@ -29,11 +28,7 @@ fn findWord(grid: &Vec<Vec<char>>, y: i32, x: i32) -> i32{
 fn checkPattern(grid: &Vec<Vec<char>>, y: i32, x: i32, tests: &Vec<(i32, i32)>) -> bool {
     let mut test_string = String::new();
     for i in 0..=1 {
-        let check1 = y + tests[i].0;
-        let check2 = x + tests[i].1;
-        if let Some(v) = getGridIndex(grid, check1, check2) {
-            test_string.push(v);
-        }
+        if let Some(v) = getGridIndex(grid, y + tests[i].0, x + tests[i].1) { test_string.push(v); }
     }
     test_string == "MS" || test_string == "SM"
 }
@@ -43,33 +38,25 @@ fn findCrossMas(grid: &Vec<Vec<char>>, y: i32, x: i32) -> i32 {
     let test2: Vec<(i32, i32)> = vec![(-1, 1), (1, -1)];
 
     if getGridIndex(grid, y, x).unwrap().to_string() == "A" {
-        if checkPattern(grid, y, x, &test1) && checkPattern(grid, y, x, &test2) {
-            return 1;
-        }
+        if checkPattern(grid, y, x, &test1) && checkPattern(grid, y, x, &test2) { return 1; }
     }
     0
 }
 
-pub fn d4c1 (content: String) -> i32 {
+pub fn d4 (content: String, f: fn(&Vec<Vec<char>>, i32, i32) -> i32) -> i32{
     let grid: Vec<Vec<char>> = getLines(&content).iter().map(|x| x.chars().collect()).collect();
     let mut acc = 0;
     for y in 0..grid.len(){
         let line = &grid[y];
-        for x in 0..line.len(){
-            acc += findWord(&grid, y as i32, x as i32)
-        }
+        for x in 0..line.len(){ acc += f(&grid, y as i32, x as i32) }
     }
     acc
 }
 
+pub fn d4c1 (content: String) -> i32 {
+    d4(content, findWord)
+}
+
 pub fn d4c2 (content: String) -> i32 {
-    let grid: Vec<Vec<char>> = getLines(&content).iter().map(|x| x.chars().collect()).collect();
-    let mut acc = 0;
-    for y in 0..grid.len(){
-        let line = &grid[y];
-        for x in 0..line.len(){
-            acc += findCrossMas(&grid, y as i32, x as i32)
-        }
-    }
-    acc
+    d4(content, findCrossMas)
 }
