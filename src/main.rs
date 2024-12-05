@@ -4,11 +4,13 @@ mod day01;
 mod day02;
 mod day03;
 mod parser;
+mod day04;
 
 use crate::day01::{d1c1, d1c2};
 use crate::day02::{d2c1, d2c2};
 use crate::day03::{d3c1, d3c2};
 use std::fs::read_to_string;
+use crate::day04::{d4c1, d4c2};
 
 fn getInput(d: i32) -> String {
     read_to_string(format!("inputs/in{}", d)).unwrap()
@@ -25,6 +27,8 @@ fn main() {
         (2, 2) => d2c2(getInput(2)),
         (3, 1) => d3c1(getInput(3)),
         (3, 2) => d3c2(getInput(3)),
+        (4, 1) => d4c1(getInput(4)),
+        (4, 2) => d4c2(getInput(4)),
         (_, _) => panic!("Invalid <3, use \"cargo run d c\", where d is the day and c is the challenge ")
     };
     println!("Result of day {}, challenge {}, is {}", day, challenge, res)
